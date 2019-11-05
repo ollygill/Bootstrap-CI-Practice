@@ -51,6 +51,8 @@ evals %>%
   nest() %>%
   mutate(results = map(data, ~ lm(score ~ age + gender, data = .x))) %>%
   mutate(coefficients = map(results, ~coef(.x))) %>%
-  mutate(age_coef = map_dbl(coefficients, ~ pluck(.x, "age")))
+  mutate(age_coef = map_dbl(coefficients, ~ pluck(.x, "age"))) %>%
+  summarize(lower = quantile(age_coef, prob = 0.025),
+            higher = quantile(age_coef, prob = 0.975))
 ```
 
